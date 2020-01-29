@@ -2,7 +2,7 @@
 
 ## Use Cases for ansible-base
 
-What `ansible/ansible` will `ansible-base`
+What `ansible/ansible` will become, ie `ansible-base`
 
 
 * `ansible[|-playbook|-galaxy|-pull|-doc]` --help
@@ -33,7 +33,7 @@ Windows touches 5 main areas in the Ansible engine itself:
 ### Executor
 
 This is the code used to build the "manifest" (metadata used to execute a module) and the code is currently located at [lib/ansible/executor/powershell](https://github.com/ansible/ansible/tree/devel/lib/ansible/executor/powershell). This code is is what implements become, async, coverage (ansible-test) for Windows hosts and it's [entrypoint](https://github.com/ansible/ansible/blob/86663abf371d8352498554ab72c00c55890b5588/lib/ansible/executor/powershell/module_manifest.py#L259-L262) requires a lot of information about the task itself to achieve this. Taking this outside of the Ansible codebase would require us to create an interface we can rely on being stable as right now it's just kept in lock step with whatever calls it and is tested in CI.
-Another component of the executor is the various powershell wrapper scripts that are part of the manifest sent to the Windows host. These scripts contain the logic used by PowerShell to execute the module and return the data back to the controller. They have the ability to utilise existing PowerShell and C# module_utils to reduce code duplication which is critical due to the code complexity of these utils. Splitting them out means bugfixes in 1 would have to be transfered to the other which is not easy due to the code complexity and modules could potentially loose out of extra functionality that we add in the other.
+Another component of the executor is the various powershell wrapper scripts that are part of the manifest sent to the Windows host. These scripts contain the logic used by PowerShell to execute the module and return the data back to the controller. They have the ability to utilise existing PowerShell and C# module_utils to reduce code duplication which is critical due to the code complexity of these utils. Splitting them out means bugfixes in 1 would have to be transferred to the other which is not easy due to the code complexity and modules could potentially loose out of extra functionality that we add in the other.
 
 ### Shell
 
@@ -72,9 +72,6 @@ Some of the Windows modules are used by ansible-test helpers, for example:
 * [`test/lib/ansible_test/_data/playbooks/windows_coverage_setup.yml`](https://github.com/ansible/ansible/blob/devel/test/lib/ansible_test/_data/playbooks/windows_coverage_setup.yml) - uses `win_file` and `win_acl` to setup directories to enable code coverage
 * [`test/integration/targets/setup_remote_tmp_dir/tasks/windows.yml`](https://github.com/ansible/ansible/blob/devel/test/integration/targets/setup_remote_tmp_dir/tasks/windows.yml) - uses `win_tempfile` to generate unique working director for tests
 * and others...
-
-
-
 
 ## Missing from ansible-minimal
 
